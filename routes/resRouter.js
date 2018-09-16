@@ -360,6 +360,36 @@ resRouter.route('/:resId/dishes')
         }, (err) => next(err))
         .catch((err) => next(err));
 })
+.delete(cors.corsWithOptions,authenticate.verifyUser,(req,res,next) => {
+    Res.findById(req.params.resId)
+    .then((rest) => {
+        if (rest != null) {
+            if(rest.dishes.indexOf(req.body._id)>-1){
+                var index = rest.dishes.indexOf(req.body._id);
+                if (index !== -1) rest.dishes.splice(index, 1);
+                rest.save()
+                .then((rest) => {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(rest);
+                }, (err) => next(err));
+                
+                
+            }else{
+                console.log(rest.dishes.indexOf(req.body._id));
+                err = new Error('Restautant ' + req.params.resId + ' does not contains this foodItem');
+                err.status = 409;
+                return next(err);
+           }
+            
+        }else {
+            err = new Error('Restautant ' + req.params.resId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+})
 
 
 module.exports = resRouter;
