@@ -90,21 +90,25 @@ dishRouter.route('/:dishId')
     })
     .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
 
-        if (dish.user.equals(req.user._id)) {
-
-        Dishes.findByIdAndRemove(req.params.dishId)
-            .then((resp) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(resp);
-            }, (err) => next(err))
-
+        Dishes.findById(req.params.dishId)
+            .then((dish) =>{
+                if (dish.user.equals(req.user._id)) {
+                    Dishes.findByIdAndRemove(req.params.dishId)
+                        .then((resp) => {
+                            res.statusCode = 200;
+                            res.setHeader('Content-Type', 'application/json');
+                            res.json(resp);
+                        }, (err) => next(err))
+            
+                        .catch((err) => next(err))
+                    }else{
+                        err = new Error('You are not authorized to perform this operation');
+                        err.status = 403;
+                        return next(err);
+                    }
+            },(err) => next(err))
             .catch((err) => next(err))
-        }else{
-            err = new Error('You are not authorized to perform this operation');
-            err.status = 403;
-            return next(err);
-        }
+       
 
     });
     dishRouter.route('/filters/inHouseFood')
