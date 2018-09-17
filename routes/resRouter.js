@@ -360,7 +360,7 @@ resRouter.route('/:resId/dishes')
         }, (err) => next(err))
         .catch((err) => next(err));
 })
-.delete(cors.corsWithOptions,authenticate.verifyUser,(req,res,next) => {
+.put(cors.corsWithOptions,authenticate.verifyUser,(req,res,next) => {
     Res.findById(req.params.resId)
     .then((rest) => {
         if (rest != null) {
