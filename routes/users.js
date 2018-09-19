@@ -152,6 +152,7 @@ router.get('/auth/firebase/verifyUser',(req,res) => {
   
   .then((decodedToken) => {
     var uid = decodedToken.uid;
+    console.log(decodedToken);
     User.findOne({userId:uid},(err,user) => {
       if(err){
         res.statusCode = 401;

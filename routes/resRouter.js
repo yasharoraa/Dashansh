@@ -29,7 +29,7 @@ resRouter.route('/')
         req.body.user = req.user._id;
         Res.create(req.body)
             .then((rest) => {
-                
+
                 console.log('Dish Created', rest);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -79,13 +79,13 @@ resRouter.route('/:resId')
 
     })
 
-    .post(cors.corsWithOptions, authenticate.verifyUser,(req, res, next) => {
+    .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
 
         res.statusCode = 403;
         res.end('POST operation not supported on /dishes/');
 
     })
-    .put(cors.corsWithOptions, authenticate.verifyUser,(req, res, next) => {
+    .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         Res.findByIdAndUpdate(req.params.resId, {
             $set: req.body
         }, { new: true })
@@ -97,7 +97,7 @@ resRouter.route('/:resId')
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser,(req, res, next) => {
+    .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
 
         Res.findByIdAndRemove(req.params.resId)
             .then((resp) => {
@@ -138,16 +138,19 @@ resRouter.route('/:resId/comments')
         Res.findById(req.params.resId)
             .then((rest) => {
                 if (rest != null) {
-                    req.body.author = req.user._id;
-                    rest.comments.push(req.body);
-                    rest.save()
-                        .then((rest) => {
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', 'application/json');
-                            res.json(rest);
-                        }, (err) => next(err));
-                }
-                else {
+                
+                    
+                        req.body.author = req.user._id;
+                        rest.comments.push(req.body);
+                        rest.save()
+                            .then((rest) => {
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'application/json');
+                                res.json(rest);
+                            }, (err) => next(err))
+                            .catch((err) => next(err));
+
+                } else {
                     err = new Error('Restaurant ' + rest.params.dishId + ' not found');
                     err.status = 404;
                     return next(err);
@@ -156,9 +159,35 @@ resRouter.route('/:resId/comments')
             .catch((err) => next(err));
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        res.statusCode = 403;
-        res.end('PUT operation not supported on dishes'
-            + req.params.dishId + '/comments');
+        Res.findById(req.params.resId)
+        .then((rest) => {
+            if(rest!=null){
+                    var rating;
+                    var found;
+                    var array = rest.comments;
+                    for (var i = 0; i < array.length; i++) {
+                        if (array[i].author.equals(req.user._id)) {
+                            rating = array[i];
+                            found = true;
+                            break;
+                        }else{
+                            found =false;
+                        }
+                    }
+                    if(found){
+                        if(rating){
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(rating);
+                        }
+                        
+                    }else{
+                      res.statusCode  = 404;
+                      res.json("not found");  
+                    }
+            }
+        },(err) => next(err))
+        .catch((err) => next(err))
     })
     .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         Res.findById(req.params.resId)
@@ -181,6 +210,7 @@ resRouter.route('/:resId/comments')
             }, (err) => next(err))
             .catch((err) => next(err))
     });
+
 
 resRouter.route('/:dishId/comments/:commentId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200) })
@@ -318,78 +348,78 @@ resRouter.route('/filters/nonVeg')
             .catch((err) => next(err))
     });
 resRouter.route('/filters/myRes')
-.options(cors.cors, (req, res) => { res.sendStatus(200) })
-.get(cors.cors, authenticate.verifyUser,(req, res, next) => {
-    Res.find({ user: req.user._id})
-        .then((rests) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(rests);
-        }, (err) => next(err))
+    .options(cors.cors, (req, res) => { res.sendStatus(200) })
+    .get(cors.cors, authenticate.verifyUser, (req, res, next) => {
+        Res.find({ user: req.user._id })
+            .then((rests) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(rests);
+            }, (err) => next(err))
 
-        .catch((err) => next(err))
-});
+            .catch((err) => next(err))
+    });
 resRouter.route('/:resId/dishes')
-.options(cors.cors, (req,res) => {res.sendStatus(200)})
-.post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-    Res.findById(req.params.resId)
-        .then((rest) => {
-            if (rest != null) {
-                if(rest.dishes.indexOf(req.body._id)<0){
+    .options(cors.cors, (req, res) => { res.sendStatus(200) })
+    .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+        Res.findById(req.params.resId)
+            .then((rest) => {
+                if (rest != null) {
+                    if (rest.dishes.indexOf(req.body._id) < 0) {
 
-                    rest.dishes.push(req.body);
-                    rest.save()
-                    .then((rest) => {
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
-                        res.json(rest);
-                    }, (err) => next(err));
-                    
-                    
-                }else{
-                    err = new Error('Restautant ' + req.params.resId + ' already contains this foodItem');
-                    err.status = 409;
+                        rest.dishes.push(req.body);
+                        rest.save()
+                            .then((rest) => {
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'application/json');
+                                res.json(rest);
+                            }, (err) => next(err));
+
+
+                    } else {
+                        err = new Error('Restautant ' + req.params.resId + ' already contains this foodItem');
+                        err.status = 409;
+                        return next(err);
+                    }
+
+                } else {
+                    err = new Error('Restautant ' + req.params.resId + ' not found');
+                    err.status = 404;
                     return next(err);
-               }
-                
-            }else {
-                err = new Error('Restautant ' + req.params.resId + ' not found');
-                err.status = 404;
-                return next(err);
-            }
-        }, (err) => next(err))
-        .catch((err) => next(err));
-})
-.put(cors.corsWithOptions,authenticate.verifyUser,(req,res,next) => {
-    Res.findById(req.params.resId)
-    .then((rest) => {
-        if (rest != null) {
-            if(rest.dishes.indexOf(req.body._id)>-1){
-                var index = rest.dishes.indexOf(req.body._id);
-                if (index !== -1) rest.dishes.splice(index, 1);
-                rest.save()
-                .then((rest) => {
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.json(rest);
-                }, (err) => next(err));
-                
-                
-            }else{
-                console.log(rest.dishes.indexOf(req.body._id));
-                err = new Error('Restautant ' + req.params.resId + ' does not contains this foodItem');
-                err.status = 409;
-                return next(err);
-           }
-            
-        }else {
-            err = new Error('Restautant ' + req.params.resId + ' not found');
-            err.status = 404;
-            return next(err);
-        }
-    }, (err) => next(err))
-    .catch((err) => next(err));
-})
+                }
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    })
+    .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+        Res.findById(req.params.resId)
+            .then((rest) => {
+                if (rest != null) {
+                    if (rest.dishes.indexOf(req.body._id) > -1) {
+                        var index = rest.dishes.indexOf(req.body._id);
+                        if (index !== -1) rest.dishes.splice(index, 1);
+                        rest.save()
+                            .then((rest) => {
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'application/json');
+                                res.json(rest);
+                            }, (err) => next(err));
+
+
+                    } else {
+                        console.log(rest.dishes.indexOf(req.body._id));
+                        err = new Error('Restautant ' + req.params.resId + ' does not contains this foodItem');
+                        err.status = 409;
+                        return next(err);
+                    }
+
+                } else {
+                    err = new Error('Restautant ' + req.params.resId + ' not found');
+                    err.status = 404;
+                    return next(err);
+                }
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    })
 
 
 module.exports = resRouter;
