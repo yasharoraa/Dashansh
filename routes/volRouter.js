@@ -239,7 +239,7 @@ volRouter.route('/:VolId/comments/:commentId')
 
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        Dishes.findById(req.params.VolId)
+        Vol.findById(req.params.VolId)
             .then((Vol) => {
 
                 if (Vol != null && Vol.comments.id(req.params.commentId) != null) {
