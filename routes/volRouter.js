@@ -148,7 +148,7 @@ volRouter.route('/:resId/comments')
             .catch((err) => next(err));
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        Res.findById(req.params.resId)
+        Vol.findById(req.params.resId)
         .then((rest) => {
             if(rest!=null){
                     var rating;
