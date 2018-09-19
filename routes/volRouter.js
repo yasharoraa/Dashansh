@@ -109,7 +109,7 @@ volRouter.route('/:resId/comments')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200) })
 
     .get(cors.cors, (req, res, next) => {
-        Dishes.findById(req.params.resId)
+        Vol.findById(req.params.resId)
             .populate('comments.author')
             .then((res) => {
                 if (res != null) {
@@ -117,13 +117,10 @@ volRouter.route('/:resId/comments')
                     res.setHeader('Content-Type', 'application/json');
                     res.json(res.comments);
                 } else {
-                    err = new Error('restaurant' + req.params.resId + ' not found ');
+                    err = new Error('volunteer' + req.params.resId + ' not found ');
                     err.status = 404;
                     return next(err);
-
                 }
-
-
             }, (err) => next(err))
 
             .catch((err) => next(err));
@@ -151,9 +148,35 @@ volRouter.route('/:resId/comments')
             .catch((err) => next(err));
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        res.statusCode = 403;
-        res.end('PUT operation not supported on voluntters'
-            + req.params.resId + '/comments');
+        Res.findById(req.params.resId)
+        .then((rest) => {
+            if(rest!=null){
+                    var rating;
+                    var found;
+                    var array = rest.comments;
+                    for (var i = 0; i < array.length; i++) {
+                        if (array[i].author.equals(req.user._id)) {
+                            rating = array[i];
+                            found = true;
+                            break;
+                        }else{
+                            found =false;
+                        }
+                    }
+                    if(found){
+                        if(rating){
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(rating);
+                        }
+                        
+                    }else{
+                      res.statusCode  = 404;
+                      res.json("not found");  
+                    }
+            }
+        },(err) => next(err))
+        .catch((err) => next(err))
     })
     .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         Dishes.findById(req.params.resId)

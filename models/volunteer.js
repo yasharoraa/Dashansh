@@ -10,7 +10,6 @@ const commentSchema = new Schema({
     },
     comment: {
         type: String,
-        required: true
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
