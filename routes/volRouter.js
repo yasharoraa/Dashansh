@@ -111,11 +111,11 @@ volRouter.route('/:resId/comments')
     .get(cors.cors, (req, res, next) => {
         Vol.findById(req.params.resId)
             .populate('comments.author')
-            .then((res) => {
+            .then((rest) => {
                 if (res != null) {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
-                    res.json(res.comments);
+                    res.json(rest.comments);
                 } else {
                     err = new Error('volunteer' + req.params.resId + ' not found ');
                     err.status = 404;
