@@ -5,7 +5,7 @@ const cors = require('./cors');
 /* GET home page. */
 router.route('/')
 .get((req, res, next) => {
-  res.render('index', { title: 'Express' });
+  res.sendFile('about_us.html',{"root":'.'});
 });
 
 module.exports = router;
