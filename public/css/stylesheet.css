@@ -30,7 +30,7 @@ body{font-family: 'Roboto', sans-serif;}
   background: #000000 none repeat scroll 0 0;
   content: "";
   height: 100%;
-  opacity: 0.4;
+  opacity: 0.34;
   position: absolute;
   top: 0;
   width: 100%;
@@ -51,7 +51,7 @@ body{font-family: 'Roboto', sans-serif;}
 
 .middle_section {
   background: #f5f5f5 none repeat scroll 0 0;
-  padding: 26px 0 30px;
+  padding:22px 0 15px;
 }
 .heading1 {
   color: #fb8c00;
@@ -77,9 +77,9 @@ body{font-family: 'Roboto', sans-serif;}
 
 .about_intro > p {
   color: #494949;
-  font-size: 16px;
-  line-height: 25px;
-  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 21px;
+  margin: 0 0 5px;
 }
 .about_intro {margin: auto;max-width: 92%;}
 
@@ -87,8 +87,8 @@ body{font-family: 'Roboto', sans-serif;}
 .about_intro{ text-align:center;}
 .tem_section {
 /*  background: #ffffff none repeat scroll 0 0;*/
-  margin: 30px 0 0;
-  padding: 34px 0 17px;
+  margin: 20px 0 0;
+  padding: 24px 0 15px;
 
 }
 /*.box-img img {
@@ -135,7 +135,7 @@ box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.20); border-radius:4px; padding:20px; po
 }
 
 .middle_section section {
-  padding: 30px 0;
+  padding: 18px 0;
 }
 
 .white_bg {background: #ffffff none repeat scroll 0 0;}
@@ -143,20 +143,20 @@ box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.20); border-radius:4px; padding:20px; po
 .overflow-sec p {
   color: #494949;
   font-size: 15px;
-  line-height: 23px;
-  margin: 14px 0 13px;
+  line-height: 21px;
+  margin: 4px 0 4px;
 }
 
 .overflow-sec h3 {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 600;
-  margin: 24px 0 -5px;
+  margin:14px 0 6px;
 }
 
 .overflow-sec li {
   color: #494949;
   font-size: 15px;
-  margin: 14px 0 13px;
+  margin:0px 0 9px;
   list-style-type: disc;
 }
 .overflow-sec ul {
@@ -174,19 +174,19 @@ box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.20); border-radius:4px; padding:20px; po
 
 @media screen and (max-width:767px) {
 .inner_box {
-  margin: 0 0 30px;
+  margin: 0 0 15px;
   padding: 8px;
   width: 95%;
 }
 .about_intro { max-width: 100%;}	
 	
 
-.about_banner{ height: 300px;}
+.about_banner{ height: 230px;}
 .about_wraper h1 {font-size: 30px;}
 .box-content h3 {font-size: 24px;}
 
 
-.about_intro > p {font-size: 15px; line-height: 23px;}
+.about_intro > p {font-size: 14px; line-height: 21px;}
 .heading1 {
   font-size: 26px;
   padding: 0 0 0 5px;
@@ -194,7 +194,7 @@ box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.20); border-radius:4px; padding:20px; po
 
 .box-img {
   float: none;
-  padding: 0 0 30px 0;
+  padding: 0 0 12px 0;
   width: auto;
   text-align: center;
 }
