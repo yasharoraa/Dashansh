@@ -18,6 +18,7 @@ var favouriteRouter = require('./routes/favouriteRouter');
 var resRouter = require('./routes/resRouter');
 var volRouter = require('./routes/volRouter');
 var volFoodRouter = require('./routes/volFoodRouter');
+var volInfoRouter = require('./routes/volInfoRoututer');
 
 
 
@@ -63,6 +64,7 @@ app.use('/favourites',favouriteRouter);
 app.use('/restaurants',resRouter);
 app.use('/volunteers',volRouter);
 app.use('/volFood',volFoodRouter);
+app.use('/vol',volInfoRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
