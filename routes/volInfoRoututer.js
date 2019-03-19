@@ -75,7 +75,7 @@ volInfoRouter.route('/:volInfoId')
     })
     .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
 
-        Vol.findByIdAndRemove(req.params.resId)
+        VInfo.findByIdAndRemove(req.params.resId)
             .then((resp) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -85,5 +85,20 @@ volInfoRouter.route('/:volInfoId')
             .catch((err) => next(err))
 
     });
+
+    volInfoRouter.route('/filters/Info')
+    .options(cors.cors, (req, res) => { res.sendStatus(200) })
+    .get(cors.cors, authenticate.verifyUser,(req, res, next) => {
+    VInfo.findOne({ user: req.user._id})
+        .then((vol) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(vol);
+        }, (err) => next(err))
+
+        .catch((err) => next(err))
+});
+
+
 
     module.exports = volInfoRouter;

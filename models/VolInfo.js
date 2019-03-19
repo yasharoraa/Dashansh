@@ -22,7 +22,8 @@ const volInfoSchema = new Schema({
         required : true
     },
     bloodGroup : {
-        type : String
+        type : String,
+        default : ""
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
