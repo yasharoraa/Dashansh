@@ -62,7 +62,7 @@ volInfoRouter.route('/:volInfoId')
 
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        VInfo.findByIdAndUpdate(req.params.resId, {
+        VInfo.findByIdAndUpdate(req.params.volInfoId, {
             $set: req.body
         }, { new: true })
             .then((volInfo) => {
