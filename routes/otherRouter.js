@@ -3,77 +3,82 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authenticate = require('../authenticate');
 const cors = require('./cors');
-const VInfo = require('../models/VolInfo');
-const volInfoRouter = express.Router();
-volInfoRouter.use(bodyParser.json());
+const other = require('../models/other');
 
-volInfoRouter.route('/')
+const otherRouter = express.Router();
+
+otherRouter.use(bodyParser.json());
+
+otherRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200) })
     .get(cors.cors, (req, res, next) => {
-        VInfo.find({})
-            .then((volInfo) => {
+        other.find({})
+        .populate('volId')
+            .then((dishes) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(volInfo);
+                res.json(dishes);
+
             }, (err) => next(err))
+
             .catch((err) => next(err));
     })
 
     .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         req.body.user = req.user._id;
-        VInfo.create(req.body)
-            .then((volId) => {
+        other.create(req.body)
+            .then((dish) => {
+                console.log('Dish Created', dish);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(volId);
+                res.json(dish);
+
             },
 
                 (err) => next(err))
 
+
             .catch((err) => next(err));
+
+
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         res.statusCode = 403;
-        res.end('PUT operation not supported on volunteers');
+        res.end('PUT operation not supported on dishes');
+
     })
     .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         res.statusCode = 403;
-        res.end('PUT operation not supported on volunteers');
+        res.end('Delete operation not supported on other Items');
     });
 
-volInfoRouter.route('/:volInfoId')
+otherRouter.route('/:dishId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200) })
     .get(cors.cors, (req, res, next) => {
-        VInfo.findById(req.params.volInfoId)
-            .then((volInfo) => {
-                console.log('newVolunteerCreated',volInfo);
+
+
+        other.findById(req.params.dishId)
+            .populate('volId')
+            .then((dish) => {
+                console.log('Dish Created', dish);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(volInfo);
-            },
-            (err) => next(err))
+                res.json(dish);
+
+            }, (err) => next(err))
 
             .catch((err) => next(err));
+
     })
+
     .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
 
         res.statusCode = 403;
-        res.end('POST operation not supported on /volunteers/');
+        res.end('POST operation not supported on /dishes/');
 
     })
     .put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        VInfo.findByIdAndUpdate(req.params.resId, {
-            $set: req.body
-        }, { new: true })
-            .then((volInfo) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(volInfo);
-
-            }, (err) => next(err))
-            .catch((err) => next(err));
-    }).put(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        Dishes.findByIdAndUpdate(req.params.dishId, {
+        other.findByIdAndUpdate(req.params.dishId, {
             $set: req.body
         }, { new: true })
             .then((dish) => {
@@ -86,7 +91,7 @@ volInfoRouter.route('/:volInfoId')
     })
     .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
 
-        VInfo.findByIdAndRemove(req.params.resId)
+        other.findByIdAndRemove(req.params.dishId)
             .then((resp) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -96,20 +101,30 @@ volInfoRouter.route('/:volInfoId')
             .catch((err) => next(err))
 
     });
-
-    volInfoRouter.route('/filters/Info')
+    otherRouter.route('/filters/myVol/:volId')
     .options(cors.cors, (req, res) => { res.sendStatus(200) })
-    .get(cors.cors, authenticate.verifyUser,(req, res, next) => {
-    VInfo.findOne({ user: req.user._id})
-        .then((vol) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(vol);
-        }, (err) => next(err))
+    .get(cors.cors, (req, res, next) => {
+        other.find({ volId : req.params.volId })
+            .then((dishes) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(dishes);
+            }, (err) => next(err))
 
-        .catch((err) => next(err))
-});
+            .catch((err) => next(err))
+    });
+    otherRouter.route('/filters/findVol/:volId')
+    .options(cors.cors, (req, res) => { res.sendStatus(200) })
+    .get(cors.cors, (req, res, next) => {
+        other.find({ volId : req.params.volId })
+            .then((dishes) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(dishes);
+            }, (err) => next(err))
 
+            .catch((err) => next(err))
+    });
+    
 
-
-    module.exports = volInfoRouter;
+module.exports = otherRouter;

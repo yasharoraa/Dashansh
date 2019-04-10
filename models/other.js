@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const volFoodSchema = new Schema({
+const otherSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -17,18 +17,6 @@ const volFoodSchema = new Schema({
         required: true
     },
     foodType: {
-        type: Number,
-        default: 0
-    },
-    nearDlvry: {
-        type: Number,
-        default: 0
-    },
-    packedParcel: {
-        type: Number,
-        default: 0
-    },
-    sitEat: {
         type: Number,
         default: 0
     },
@@ -49,4 +37,4 @@ const volFoodSchema = new Schema({
 },{
         timestamps: true    
 });
-module.exports = mongoose.model('VolFood', volFoodSchema);
+module.exports = mongoose.model('other', otherSchema);

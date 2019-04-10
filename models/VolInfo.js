@@ -31,6 +31,7 @@ const volInfoSchema = new Schema({
     },
     
 }, {
-    timestamps : true
+    timestamps : true,
 });
+
  module.exports = mongoose.model('volInfo',volInfoSchema);
