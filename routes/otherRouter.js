@@ -55,8 +55,6 @@ otherRouter.route('/')
 otherRouter.route('/:dishId')
     .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200) })
     .get(cors.cors, (req, res, next) => {
-
-
         other.findById(req.params.dishId)
             .populate('volId')
             .then((dish) => {
