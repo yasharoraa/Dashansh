@@ -21,6 +21,10 @@ const centerSchema = new Schema({
         type: String,
         required: true
     },
+    address : {
+        type :String,
+        required : false
+    },
     account : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'account'
